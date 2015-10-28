@@ -506,7 +506,11 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
         headers.append(('Content-Disposition', content_disposition(filename)))
 
     # get content after cache control
-    content = obj[field] or ''
+    if model == 'ir.attachment' and obj.type == 'url' and obj.url:
+        status = 301
+        content = obj.url
+    else:
+        content = obj[field] or ''
 
     return (status, headers, content)
 
@@ -661,8 +665,11 @@ class WebClient(http.Controller):
             translations_per_module[mod]['messages'].extend({'id': m['src'],
                                                              'string': m['value']} \
                                                                 for m in msg_group)
-        return {"modules": translations_per_module,
-                "lang_parameters": lang_params}
+        return {
+            'lang_parameters': lang_params,
+            'modules': translations_per_module,
+            'multi_lang': len(res_lang.get_installed(request.cr, uid)) > 1,
+        }
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
@@ -1043,6 +1050,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200:
             response = request.not_found()
         else:
@@ -1074,6 +1083,8 @@ class Binary(http.Controller):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
+        elif status == 301:
+            return werkzeug.utils.redirect(content, code=301)
         elif status != 200 and download:
             return request.not_found()
 
@@ -1088,7 +1099,7 @@ class Binary(http.Controller):
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
-        response.status = str(status)
+        response.status_code = status
         return response
 
     # backward compatibility
