@@ -121,10 +121,10 @@
 <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
   <xpath expr="//div[@class='product_price']" position="inside">
     <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
-    <t t-if="len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1">
+    <t t-if="len(product.product_variant_ids) == 1">
       <a class="btn btn-default btn-xs a-submit"><span class="fa fa-shopping-cart"/></a>
     </t>
-    <t t-if="len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1">
+    <t t-if="len(product.product_variant_ids) &gt; 1">
       <a class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))"><span class="fa fa-shopping-cart"/></a>
     </t>
   </xpath>
@@ -1234,7 +1234,7 @@
 
 <template id="payment_sale_note" inherit_id="payment" name="Display Sale Note" customize_show="True" active="False">
   <xpath expr="//t[@id='acquirers_list']" position="before">
-    <t t-set="sale_note" t-value="website_sale_order.get_salenote(website_sale_order.partner_id.id)"/>
+    <t t-set="sale_note" t-value="website_sale_order.note"/>
     <t t-if="sale_note and sale_note != ''">
       <div class="oe_accept_cgv_button">
         <label><input type="checkbox" checked="checked" id="checkbox_cgv"/> <t t-esc="sale_note"/></label>
