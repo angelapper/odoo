@@ -59,8 +59,7 @@
             <field name="name">Project: employees: public, employees, followers or team members (modified)</field>
             <field name="domain_force">['|','|',
                                             ('privacy_visibility', 'in', ['public', 'portal', 'employees']),
-                                            ('message_follower_ids', 'in', [user.partner_id.id]),
-                                            ('members', 'in', [user.id]),]
+                                            ('message_follower_ids', 'in', [user.partner_id.id]),]
                                             </field>
         </record>
         
@@ -71,7 +70,6 @@
                                             ('user_id', '=', user.id),
                                             ('project_id.privacy_visibility', 'in', ['public', 'portal', 'employees']),
                                             ('message_follower_ids', 'in', [user.partner_id.id]),
-                                            ('project_id.members', 'in', [user.id]),
                                         ]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="False"/>
@@ -85,7 +83,6 @@
                                             ('user_id', '=', user.id),
                                             ('project_id.privacy_visibility', 'in', ['public', 'employees']),
                                             ('message_follower_ids', 'in', [user.partner_id.id]),
-                                            ('project_id.members', 'in', [user.id]),
                                         ]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="False"/>
