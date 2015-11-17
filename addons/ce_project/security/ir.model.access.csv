@@ -1,9 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_project_empl,project_empl,project.model_project_project,base.group_user,1,0,0,0
 access_account_analytic_account_empl,account_analytic_account_empl,analytic.model_account_analytic_account,base.group_user,1,0,0,0
-access_project_task_empl,project.task.employees,project.model_project_task,base.group_user,1,1,1,0
-access_project_task_type_empl,project.task.type.employees,project.model_project_task_type,base.group_user,1,0,0,0
-access_project_task_history_empl,project.task.history.employees,project.model_project_task_history,base.group_user,1,0,1,0
-access_project_task_hist_cum_empl,project.task.history.cumulative.employees,project.model_project_task_history_cumulative,base.group_user,1,0,1,0
-access_resource_calendar_empl,resource.calendar.employees,resource.model_resource_calendar,base.group_user,1,0,0,0
-access_resource_calendar_attendance_empl,resource.calendar.attendance.employees,resource.model_resource_calendar_attendance,base.group_user,1,0,0,0
+access_analytic_account_line_project_user,analytic_account_line_timesheet user,analytic.model_account_analytic_line,project.group_project_user,1,1,1,1
+access_sale_order_line_project_user,sale_order_line_project_user,sale.model_sale_order_line,project.group_project_user,1,1,1,1
+access_project_task,project.task,project.model_project_task,project.group_project_user,1,1,1,0
+

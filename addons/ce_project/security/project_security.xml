@@ -1,94 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="group_project_superuser" model="res.groups">
+            <field name="name">Super User</field>
+            <field name="category_id" ref="base.module_category_project_management"/>
+            <field name="implied_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
 
         <!--
-            PROJECT Manager Access rules
+            PROJECT Super User Visibility
+        -->
+        <record model="ir.rule" id="project_project_superuser_all_rule">
+            <field name="name">Project: project superuser: can sell all projects (new)</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4,ref('group_project_superuser'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="project_superuser_all_project_tasks_rule">
+            <field name="name">Project/Task: project supseruser: see all tasks (new)</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4,ref('group_project_superuser'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="issue_project_superuser_all_issues_rule">
+            <field name="name">Project/Issue: project supseruser: see all in managed issues (new)</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4,ref('group_project_superuser'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="report_project_superuser_all_rule">
+             <field name="name">Task Analysis For All (new)</field>
+             <field name="model_id" ref="project.model_report_project_task_user"/>
+             <field name="domain_force">[(1, '=', 1)]</field>
+             <field name="groups" eval="[(4,ref('group_project_superuser'))]"/>
+             <field name="perm_create" eval="True"/>
+             <field name="perm_read" eval="True"/>
+             <field name="perm_write" eval="True"/>
+             <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!--
+            PROJECT Manager Visibility
         -->
         
         <!-- Project Managers (modified): no longer see all projects: will have same visibility rules as Project Users -->
         <record model="ir.rule" id="project.project_project_manager_rule">
             <field name="name">Project: project manager: only managed projects (modified)</field>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="domain_force">['|',('user_id','=',False),('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <!-- Project Managers (modified): no longer sees all Tasks - only so for Projects they Manage  -->
         <record model="ir.rule" id="project.project_manager_all_project_tasks_rule">
-            <field name="name">Project/Task: project manager: see all in managed projects (modified)</field>
+            <field name="name">Project/Task: project manager: see all in managed tasks (modified)</field>
+            <field name="model_id" ref="project.model_project_task"/>
             <field name="domain_force">[('project_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
         
         <record model="ir.rule" id="project_issue.issue_project_manager_rule">
-            <field name="name">Project/Issue: see all in managed projects (modified)</field>
+            <field name="name">Project/Issue: see all in managed issues (modified)</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
             <field name="domain_force">[('project_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="report_project_manager_only_own_rule">
+             <field name="name">Project/Task Analysis: see all in managed tasks (new)</field>
+             <field name="model_id" ref="project.model_report_project_task_user"/>
+             <field name="domain_force">[
+                 '|',
+                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                 ('project_id.user_id', '=', user.id)
+                 ]</field>
+             <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+             <field name="perm_create" eval="True"/>
+             <field name="perm_read" eval="True"/>
+             <field name="perm_write" eval="True"/>
+             <field name="perm_unlink" eval="True"/>
         </record>
 
         <!--
-            Project User Rule
+            Project User Visibility
         -->
-        
         <!-- Project Users (new): can access public, followed/member or assigned -->
-        <record model="ir.rule" id="task_project_user_visibility_rule">
-            <field name="name">Project/Task: project users: public, followed/member or assigned</field>
+        <record model="ir.rule" id="task_user_visibility_rule">
+            <field name="name">Project/Task: project users: public, followed/member or assigned (new)</field>
             <field name="model_id" ref="project.model_project_task"/>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="domain_force">[
+                '|',
+                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                 ('user_id','=',user.id)
+                ]</field>
             <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
-            <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="False"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-        
-        <record model="ir.rule" id="issue_project_user_visibility_rule">
-            <field name="name">Project/Issue: project users: public, followed/member or assigned</field>
-            <field name="model_id" ref="project_issue.model_project_issue"/>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
-            <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
             <field name="perm_read" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_write" eval="True"/>
+            <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
-        
+
+        <record model="ir.rule" id="task_user_create_rule">
+            <field name="name">Project/Task: project users: can only manage self tasks without specific project(new)</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="issue_user_visibility_rule">
+            <field name="name">Project/Issue: project users: public, followed/member or assigned (new)</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
+            <field name="domain_force">[
+                '|','|',
+                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                 ('create_uid','=',user.id),('user_id','=',user.id)
+                ]
+            </field>
+            <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="issue_user_unlink_rule">
+            <field name="name">Project/Issue: project users: can only delete the issue he created (new)</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
+            <field name="domain_force">[('user_id','=',user.id)]  </field>
+            <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="account_analytic_line_project_user">
+            <field name="name">Project/TimeSheet: project users: can manage time sheet on task (new)</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="domain_force">[('task_id.user_id','=',user.id)]  </field>
+            <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="sale_order_line_project_user" model="ir.rule">
+            <field name="name">Project/TimeSheet: Project User: Update Sale Order Lines</field>
+            <field ref="sale.model_sale_order_line" name="model_id"/>
+            <field name="domain_force">[('order_id.user_id','=',False)]</field>
+            <field name="groups" eval="[(4, ref('project.group_project_user'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+
         <!--
             Employees Access Rule
         -->
-        
-        <!-- Employees (modified): Projects also visible to team members not in followers list -->
-        <record model="ir.rule" id="project.project_public_members_rule">
-            <field name="name">Project: employees: public, employees, followers or team members (modified)</field>
-            <field name="domain_force">['|',
-                                            ('privacy_visibility', 'in', ['public', 'portal', 'employees']),
-                                            ('message_follower_ids', 'in', [user.partner_id.id]),]
-                                            </field>
-        </record>
-        
         <!-- Employees (modified): can access public or followed; can edit only in "draft" and "cancelled" states -->
         <record model="ir.rule" id="project.task_visibility_rule">
-            <field name="name">Project/Task: employees READ: public or followed /member</field>
-            <field name="domain_force">['|','|',
-                                            ('user_id', '=', user.id),
-                                            ('project_id.privacy_visibility', 'in', ['public', 'portal', 'employees']),
-                                            ('message_follower_ids', 'in', [user.partner_id.id]),
-                                        ]</field>
+            <field name="name">Project/Task: employees READ: public or followed /member (modified)</field>
+            <field name="domain_force">
+                ['|','|','|',
+                      ('user_id', '=', user.id),
+                      ('message_partner_ids', 'in', [user.partner_id.id]),
+                      ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                      ('project_id.privacy_visibility', 'in', ['public', 'portal', 'employees']),
+                ]
+            </field>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
-        
+
         <record model="ir.rule" id="project_issue.issue_user_rule">
             <field name="name">Project/Issue: employees: public or followed /member (modified)</field>
-            <field name="domain_force">['|','|',
-                                            ('user_id', '=', user.id),
-                                            ('project_id.privacy_visibility', 'in', ['public', 'employees']),
-                                            ('message_follower_ids', 'in', [user.partner_id.id]),
-                                        ]</field>
+            <field name="domain_force">
+                ['|','|','|',
+                      ('user_id', '=', user.id),
+                      ('message_partner_ids', 'in', [user.partner_id.id]),
+                      ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                      ('project_id.privacy_visibility', '=', 'employees')
+                ]
+            </field>
             <field name="perm_read" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
-        </record>        
-        
+        </record>
     </data>
 </openerp>

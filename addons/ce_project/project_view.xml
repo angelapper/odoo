@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Project"
-            id="base.menu_main_pm"
-            groups="project.group_project_manager,project.group_project_user,base.group_user"
-            sequence="40"/>
-            
+        <menuitem name="Search"
+            id="project.menu_project_management"
+            parent="base.menu_main_pm"
+            sequence="2" groups="base.group_user,project.group_project_manager,project.group_project_user"/>
     </data>
 </openerp>
