@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Define ChemEOR Project Management Permissions
+#    Define Angelapper Project Management Permissions
 #    Copyright (C) 2014 ChemEOR
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,15 +19,15 @@
 #
 ##############################################################################
 {
-    'name': 'ChemEOR Projects Extensions',
+    'name': 'Angelapper Projects Extensions',
     'version': '1.0',
     'category': 'Project Management',
     'summary': """Enhance Project Permission Control""",
     'description': """
         Enhance Project Permission Control
     """,    
-    'author': 'Joshua Zhao',
-    'website': "http://www.chemeor.com",    
+    'author': 'Angelapper',
+    'website': "http://www.angelapper.com",
     'category': 'Project',
     'version': '0.1',    
     'images': [
