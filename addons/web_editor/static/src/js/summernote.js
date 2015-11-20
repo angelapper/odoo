@@ -2318,8 +2318,14 @@ function summernote_paste (event) {
         r.select();
     }
 
+    //[FIX] Angelapper: this part prevent plain text to paste
     var html = clipboardData.getData("text/html");
-    var $node = $('<div/>').html(html);
+    var content= clipboardData.getData("text");
+    if (html !== undefined && html !=="") {
+        content=html;
+    }
+    var $node = $('<div/>').html(content);
+    //END OF FIX
 
     /* 
         remove undesirable tag
