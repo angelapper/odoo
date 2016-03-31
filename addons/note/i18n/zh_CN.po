@@ -3,14 +3,15 @@
 # * note
 # 
 # Translators:
+# Joroy <13637815@qq.com>, 2016
 # patrick liao <patrickliao@189.cn>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-11-21 06:46+0000\n"
-"Last-Translator: patrick liao <patrickliao@189.cn>\n"
+"PO-Revision-Date: 2016-03-12 01:56+0000\n"
+"Last-Translator: Joroy <13637815@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr "有效"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr "存档"
+msgstr "归档"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -60,7 +61,7 @@ msgstr "配置"
 #: model:ir.model.fields,field_description:note.field_note_stage_create_uid
 #: model:ir.model.fields,field_description:note.field_note_tag_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_date

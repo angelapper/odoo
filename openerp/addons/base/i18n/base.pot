@@ -4152,7 +4152,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
 msgid ",\n"
-"    'summary': 'Repair broken or damaged products',\n"
 "The aim is to have a complete module to manage all products repairs.\n"
 "====================================================================\n"
 "\n"
@@ -7985,13 +7984,6 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_light_multi_company
 msgid "Enable Light Multi Company"
-msgstr ""
-
-#. module: base
-#: code:addons/base/res/res_config.py:479
-#, python-format
-msgid "Enabling this feature will install the following paying application(s) : \n"
-"%s"
 msgstr ""
 
 #. module: base
@@ -13258,6 +13250,11 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:486
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_mrp_repair
+msgid "Repair broken or damaged products"
 msgstr ""
 
 #. module: base
