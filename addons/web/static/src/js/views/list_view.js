@@ -1156,7 +1156,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                     record.set(column.id, names[0]);
                 });
             }
-        } else if (column.type === 'many2many' || column.type === 'one2many') {
+        } else if (column.type === 'many2many') {
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
             if (value instanceof Array && !_.isEmpty(value)
@@ -1901,6 +1901,7 @@ var Column = Class.extend({
             row_data[this.id].value, this, options.value_if_empty));
     }
 });
+ListView.Column = Column;
 
 var MetaColumn = Column.extend({
     meta: true,
