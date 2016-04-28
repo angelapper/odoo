@@ -376,20 +376,21 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 self.do_onchange(null);
             }
             self.on_form_changed();
-            self.rendering_engine.init_fields();
-            self.is_initialized.resolve();
-            self.record_loaded.resolve();
-            self.do_update_pager(record.id === null || record.id === undefined);
-            if (self.sidebar) {
-               self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
-            }
-            if (record.id) {
-                self.do_push_state({id:record.id});
-            } else {
-                self.do_push_state({});
-            }
-            self.$el.removeClass('oe_form_dirty');
-            self.autofocus();
+            self.rendering_engine.init_fields().then(function() {
+                self.is_initialized.resolve();
+                self.record_loaded.resolve();
+                self.do_update_pager(record.id === null || record.id === undefined);
+                if (self.sidebar) {
+                   self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
+                }
+                if (record.id) {
+                    self.do_push_state({id:record.id});
+                } else {
+                    self.do_push_state({});
+                }
+                self.$el.removeClass('oe_form_dirty');
+                self.autofocus();
+            });
         });
     },
     /**
@@ -830,7 +831,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 def.reject();
             },
         };
-        Dialog.confirm(this, message, options);
+        var dialog = Dialog.confirm(this, message, options);
+        dialog.$modal.on('hidden.bs.modal', function() {
+            def.reject();
+        });
         return def;
     },
     /**

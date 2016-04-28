@@ -486,7 +486,7 @@ class Home(http.Controller):
                     redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
-            values['error'] = "Wrong login/password"
+            values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
 
 class WebClient(http.Controller):
@@ -1373,7 +1373,7 @@ class CSVExport(ExportFormat, http.Controller):
                 if d is False: d = None
 
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if type(d) is str and d.startswith('=', '-', '+'):
+                if type(d) is str and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
                 row.append(d)
